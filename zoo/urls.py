@@ -24,8 +24,11 @@ router = routers.DefaultRouter()
 router.register(r'animals', views.AnimalList)
 router.register(r'habitats', views.HabitatList)
 router.register(r'employees', views.EmployeeList)
+router.register(r'tickets', views.TicketList)
+router.register(r'users', views.UserList)
 
 urlpatterns = [
+    url(r'^login$', views.login_user, name='login'),
     url(r'^', include(router.urls)),
 ]
 
@@ -40,3 +43,13 @@ urlpatterns = [
 #     url(r'^employees/$', views.EmployeeList.as_view(), name='employee-list'),
 #     url(r'^employees/(?P<pk>[0-9]+)/$', views.EmployeeDetail.as_view(), name='employee-detail'),
 # ]
+
+
+
+
+
+
+
+
+
+

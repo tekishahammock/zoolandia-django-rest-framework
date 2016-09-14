@@ -2,6 +2,7 @@ from django.db import models
 from django.utils import timezone
 
 
+
 class Habitat(models.Model):
   name = models.CharField(max_length=25)
   created = models.DateTimeField(default=timezone.now)
@@ -17,6 +18,14 @@ class Habitat(models.Model):
   def __unicode__(self):
     return "{}: {}".format(self.id, self.name)
 
+
+class Ticket(models.Model):
+  owner = models.ForeignKey('auth.User', related_name='tickets')
+  habitat = models.ForeignKey(Habitat, related_name='tickets')
+  purchased = models.DateTimeField(default=timezone.now)
+
+  def __str__(self):
+    return "{}: {}".format(self.id, self.habitat.name)
 
 class Animal(models.Model):
   name = models.CharField(max_length=55)
