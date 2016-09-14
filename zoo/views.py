@@ -20,19 +20,8 @@ class AnimalList(viewsets.ModelViewSet):
     queryset = Animal.objects.all()
     serializer_class = AnimalSerializer
 
-class AnimalDetail(viewsets.ModelViewSet):
-    model = Animal
-    queryset = Animal.objects.all()
-    serializer_class = AnimalSerializer
-    lookup_field = 'name'
-
 
 class UserList(viewsets.ModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-
-
-class UserDetail(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
@@ -44,33 +33,16 @@ class TicketList(viewsets.ModelViewSet):
 
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
-class TicketDetail(viewsets.ModelViewSet):
-    model = Ticket
-    queryset = Ticket.objects.all()
-    serializer_class = TicketSerializer
-    lookup_field = 'user'
-
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-
 
 class HabitatList(viewsets.ModelViewSet):
     queryset = Habitat.objects.all()
     serializer_class = HabitatSerializer
-
-class HabitatDetail(viewsets.ModelViewSet):
-    queryset = Habitat.objects.all()
-    serializer_class = HabitatSerializer
-    lookup_field = 'name'
 
 
 class EmployeeList(viewsets.ModelViewSet):
     queryset = Employee.objects.all()
     serializer_class = EmployeeSerializer
 
-class EmployeeDetail(viewsets.ModelViewSet):
-    queryset = Employee.objects.all()
-    serializer_class = EmployeeSerializer
-    lookup_field = 'last_name'
 
 @csrf_exempt
 def login_user(request):
