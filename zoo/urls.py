@@ -26,9 +26,11 @@ router.register(r'habitats', views.HabitatList)
 router.register(r'employees', views.EmployeeList)
 router.register(r'tickets', views.TicketList)
 router.register(r'users', views.UserList)
+router.register(r'visitors', views.VisitorList)
 
 urlpatterns = [
     url(r'^login$', views.login_user, name='login'),
+    url(r'^register$', views.register_user, name='register'),
     url(r'^', include(router.urls)),
 ]
 

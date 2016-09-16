@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from zoo.models import Animal, Habitat, Employee, Ticket
+from zoo.models import *
 
 # Using the HyperlinkedModelSerializer will examine the relationships
 # between the models, and the data, and provide a hyperlink to the
@@ -20,18 +20,27 @@ class AnimalSerializer(serializers.HyperlinkedModelSerializer):
     fields = ('id', 'url', 'name', 'purchased', 'habitat')
 
 
+class UserSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ('id', 'url', 'username', 'tickets', 'visitor')
+
+
 class TicketSerializer(serializers.HyperlinkedModelSerializer):
+  owner = UserSerializer()
 
   class Meta:
     model = Ticket
     fields = ('id', 'url', 'owner', 'purchased', 'habitat')
 
 
-class UserSerializer(serializers.HyperlinkedModelSerializer):
+
+class VisitorSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
-        model = User
-        fields = ('id', 'url', 'username', 'tickets')
+        model = Visitor
+        fields = ('id', 'url', 'user', 'age', 'gender')
 
 
 class HabitatSerializer(serializers.HyperlinkedModelSerializer):

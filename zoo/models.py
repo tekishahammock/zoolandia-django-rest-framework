@@ -1,6 +1,27 @@
 from django.db import models
 from django.utils import timezone
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.contrib.auth.models import User
 
+class Visitor(models.Model):
+  age = models.IntegerField(null=True)
+  gender = models.CharField(max_length=10, null=True)
+  user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+  def __str__(self):
+    return "{} {} {}".format(self.user.username, self.age, self.gender)
+
+# Define signals so our Profile model will be automatically
+# created/updated when we create/update User instances.
+@receiver(post_save, sender=User)
+def create_user_visitor(sender, instance, created, **kwargs):
+    if created:
+        Visitor.objects.create(user=instance)
+
+@receiver(post_save, sender=User)
+def save_user_visitor(sender, instance, **kwargs):
+    instance.visitor.save()
 
 
 class Habitat(models.Model):
