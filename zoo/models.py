@@ -41,7 +41,7 @@ class Habitat(models.Model):
 
 
 class Ticket(models.Model):
-  owner = models.ForeignKey('auth.User', related_name='tickets')
+  owner = models.ForeignKey(User, related_name='tickets')
   habitat = models.ForeignKey(Habitat, related_name='tickets')
   purchased = models.DateTimeField(default=timezone.now)
 

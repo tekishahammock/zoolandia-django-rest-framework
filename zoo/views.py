@@ -1,12 +1,11 @@
 from django.contrib.auth.models import User
 from django.contrib.auth import logout, login, authenticate
-from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponse
 
 import json
 
-from rest_framework import permissions
-from rest_framework import viewsets
+from rest_framework import permissions, status, viewsets
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
@@ -38,6 +37,37 @@ class TicketList(viewsets.ModelViewSet):
     serializer_class = TicketSerializer
 
     permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly)
+
+    # The reason that the create method needed to be overridden is because
+    # if you look in serializers.py, you will see that the owner field of
+    # the TicketSerializer uses the base serialization method instead of
+    # a HyperlinkedModelSerializer. This enables the entire owner object to
+    # be sent to the client - as a property of the ticket itself - instead
+    # of the owner's URL (see http://localhost:8000/tickets/ for example).
+    #
+    # The side effect of this is that when creating a new ticket, the entire
+    # owner object needed to be in the request body. Unfortunately, doing this
+    # forces Django to try to create a new User object instead of just assigning
+    # that user to the ticket.
+    #
+    # I'm unclear why this happens.
+    #
+    # Therefore, I needed to override that default behavior and write my own,
+    # custom creation logic for a ticket.
+    #
+    def create(self, request):
+        existing_owner = User.objects.get(id=request.data['owner'])
+        existing_habitat = Habitat.objects.get(id=request.data['habitat'])
+
+        new_ticket = Ticket(owner=existing_owner, habitat=existing_habitat)
+
+        new_ticket.save()
+
+        from django.core import serializers
+        data = serializers.serialize("json", (new_ticket,))
+        print(data)
+
+        return Response(data, status=status.HTTP_201_CREATED)
 
 
 class HabitatList(viewsets.ModelViewSet):
